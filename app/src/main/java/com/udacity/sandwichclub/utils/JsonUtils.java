@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 
 public class JsonUtils {
 
@@ -17,21 +19,34 @@ public class JsonUtils {
     public static Sandwich parseSandwichJson(String json) throws JSONException {
 
 
-        JSONObject rootObject = new JSONObject(json);
-        JSONObject subObj = rootObject.getJSONObject("name");
-        String mainName = subObj.getString("mainName");
-        String placeOfOrigin = subObj.getString("placeOfOrigin");
-        int image = subObj.getInt("image");
-        String description = subObj.getString("description");
-        JSONArray jsonArray = new JSONArray(json);
+        String mainName;
+        String placeOfOrigin;
+        String description;
+        String image;
+        String alsoKnownAs;
+        String ingredients;
+
+
+        JSONObject jsonObject = new JSONObject(json);
+        JSONObject name = jsonObject.getJSONObject("name");
+        mainName = name.getString("mainName");
+        placeOfOrigin = name.getString("placeOfOrigin");
+        description = name.getString("description");
+        image = name.getString("image");
+
+        JSONArray jsonArray = jsonObject.getJSONArray(json);
         for (int i = 0; i < jsonArray.length(); i++) {
-            subObj = jsonArray.getJSONObject(i);
-            String alsoKnownAs = subObj.getString("alsoKnownAs");
-            String ingredients = subObj.getString("alsoKnownAs");
+
+            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+
+            alsoKnownAs = jsonObject1.getString("alsoKnownAs");
+            ingredients = jsonObject1.getString("ingredients");
+
+
         }
 
-
         return parseSandwichJson(json);
+
     }
 
 
