@@ -1,11 +1,14 @@
 package com.udacity.sandwichclub.utils;
 
+import android.util.Log;
+
 import com.udacity.sandwichclub.model.Sandwich;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,38 +19,59 @@ public class JsonUtils {
 
     }
 
-    public static Sandwich parseSandwichJson(String json) throws JSONException {
+    public static Sandwich parseSandwichJson(String json) {
+
+        try {
+
+            //Create JSONObject of whole json string
+            JSONObject rootObject = new JSONObject(json);
+
+            //Get name JsonObject
+            JSONObject subObj = rootObject.getJSONObject("name");
+
+            //Get mainName and aka values
+            String mainName = subObj.getString("mainName");
+            JSONArray aka = subObj.getJSONArray("alsoKnownAs");
+
+            //Get PlaceOfOrigin
+            String placeOfOrigin = rootObject.getString("placeOfOrigin");
+
+            //Get Description
+            String description = rootObject.getString("description");
+
+            //GET image path
+            String imagePath = rootObject.getString("image");
 
 
-        String mainName;
-        String placeOfOrigin;
-        String description;
-        String image;
-        String alsoKnownAs;
-        String ingredients;
+            Log.v("my_tag", "mainName is: " + mainName);
+            Log.v("my_tag", "placeOfOrigin is: " + placeOfOrigin);
+            Log.v("my_tag", "image is: " + imagePath);
+            Log.v("my_tag", "description is: " + description);
 
+            //Get ingredient array
+            JSONArray ingredientArray = rootObject.getJSONArray("ingredients");
+            List<String> alsoKnownAsList = new ArrayList<>();
 
-        JSONObject jsonObject = new JSONObject(json);
-        JSONObject name = jsonObject.getJSONObject("name");
-        mainName = name.getString("mainName");
-        placeOfOrigin = name.getString("placeOfOrigin");
-        description = name.getString("description");
-        image = name.getString("image");
+            //Iterate through the array of aka and add it to list
+            for (int i = 0; i < aka.length(); i++) {
+                String alsoKnownAs = aka.getString(i);
+                alsoKnownAsList.add(alsoKnownAs);
+            }
 
-        JSONArray jsonArray = jsonObject.getJSONArray(json);
-        for (int i = 0; i < jsonArray.length(); i++) {
+            //Iterate through the array of ingredients and add it to list
 
-            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+            List<String> ingredientList = new ArrayList<>();
+            for (int i = 0; i < ingredientArray.length(); i++) {
+                ingredientList.add(ingredientArray.getString(i));
+            }
 
-            alsoKnownAs = jsonObject1.getString("alsoKnownAs");
-            ingredients = jsonObject1.getString("ingredients");
+            Sandwich sandwich = new Sandwich(mainName, alsoKnownAsList, placeOfOrigin, description, imagePath, ingredientList);
+            return sandwich;
 
-
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        return parseSandwichJson(json);
-
+        return null;
     }
-
-
 }
