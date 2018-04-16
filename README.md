@@ -17,4 +17,6 @@ Through this project, you will:
 - Practice JSON parsing to a model object
 - Design an activity layout
 - Populate all fields in the layout accordingly
+# library 
+* [picasso] (http://square.github.io/picasso/)
 
